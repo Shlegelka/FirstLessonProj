@@ -13,7 +13,7 @@ public class HomeWorkApp {
 
     public static void checkSumSign() {
 
-        int a = 7;
+        int a = 6;
         int b = 8;
         int sum = a + b;
 
