@@ -1,51 +1,143 @@
-import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
-public class HW_3 {
-    public static void main(String[] args) {
-        System.out.println("Hello world");
-        int[] array = {1, 1, 0, 0, 1, 0, 1, 1, 0, 0 };
 
-        System.out.println(Arrays.toString(array));
-           }
-    public static void changeZeroesAnd0nes(int[] inputArray)
+public class HW
+{
+    static char[][] map;
+    static final int SIZE = 5;
+    static final int DOTS_TO_WIN = 3;
+
+    static final char DOT_EMPTY = '.';
+    static final char DOT_X = 'X';
+    static final char DOT_O = 'O';
+
+    public static void main(String[] args)
     {
-        for (int i = 0; i < inputArray.length; i++)
-    {
-        inputArray[i] = (inputArray[i] == 1) ? 0 : 1;
-       }
+        // Инициализация поля
+        initMap();
+        // Вывод поля на экран
+        printMap();
+
+        // цикл
+        while (true)
+        {
+            // ход человека
+            humanTurn();
+            // вывод куда сходил
+            printMap();
+            // проверка победы
+            if (isWinner(DOT_X))
+            {
+                System.out.println("Победил человек");
+                break;
+            }
+            // проверка ничьи
+            if (isMapFull())
+            {
+                System.out.println("Ничья");
+                break;
+            }
+
+            // ход ИИ
+            aiTurn();
+            // вывод куда сходил
+            printMap();
+            // проверка победы
+            if (isWinner(DOT_O))
+            {
+                System.out.println("Победил Т-1000");
+                break;
+            }
+            // проверка ничьи
+            if (isMapFull())
+            {
+                System.out.println("Ничья");
+                break;
+            }
+        }
+
     }
 
-    public static void fillArrayWithSequence(int[] arr)
+    static void initMap()
     {
-        for (int i = 0; i < arr.length; i++)
+        map = new char[SIZE][SIZE];
+        for (int row = 0; row < SIZE; row++)
         {
-            arr[i] = (i+i);
+            for (int columns = 0; columns < SIZE; columns++)
+            {
+                map[row][columns] = DOT_EMPTY;
+            }
         }
     }
 
-   static void doubleNumbersLessThanSixIn(int[] inputArray)
-   {
-       for (int i = 0; i < inputArray.length; i++)
-       {
-           inputArray[i] = (inputArray[i] < 6) ? (inputArray[i] * 2) : inputArray[i];
-       }
-   }
+    static void printMap()
+    {
+        for (int i = 0; i <= SIZE; i++)
+        {
+            System.out.print(i + " ");
+        }
 
-   public static void fillDiagonalsWith0nes(int[][] square)
-   {
-       for (int i = 0; i < square.length; i++)
-           square[i][i] = 1;
-   }
+        System.out.println();
 
-   public static int[] getNewArrayWith(int initialValue, int lenght)
-   {
-   int[] result = new int[lenght];
-   for (int i = 0; i < result.length; i++)
-   {
-       result[i] = initialValue;
-   }
-   return result;
-   }
-}
+        for (int row = 0; row < SIZE; row++)
+        {
+            System.out.print((row + 1) + " ");
+            for (int column = 0; column < SIZE; column++)
+            {
+                System.out.print(map[row][column] + " ");
+            }
+            System.out.println();
+        }
+    }
 
+    static void humanTurn()
+    {
+        Scanner scanner = new Scanner(System.in);
 
+        int x;
+        int y;
+
+        do
+        {
+            System.out.println("Введите координаты в формате X Y");
+            x = scanner.nextInt() - 1;
+            y = scanner.nextInt() - 1;
+
+        } while (!isCellValid(x, y));
+
+        map[y][x] = DOT_X;
+    }
+
+    static void aiTurn()
+    {
+        Random random = new Random();
+
+        int x;
+        int y;
+
+        do
+        {
+            System.out.println("Введите координаты в формате X Y");
+            x = random.nextInt(SIZE);
+            y = random.nextInt(SIZE);
+
+        } while (!isCellValid(x, y));
+
+        System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
+
+        map[y][x] = DOT_O;
+    }
+
+    static boolean isCellValid(int x, int y)
+    {
+        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE)
+        {
+            return false;
+        }
+        if (map[y][x] == DOT_EMPTY)
+        {
+            return true;
+        }
+        return false;
+    }
